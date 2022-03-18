@@ -103,7 +103,8 @@ def train_eval(models, train, test, preproc, draw=False, title=""):
         
     return train_X # TODO: DA TOGLIERE
     
-def train_eval_cluster(models, train, test, preproc, k, models_per_cl=False, draw=False):
+def train_eval_cluster(models, train, test, preproc, k, models_per_cl=False, 
+                       latlong=True, draw=False):
     """preproc_kmeans = make_column_transformer(
         (OneHotEncoder(handle_unknown="ignore"), make_column_selector(dtype_exclude="number")),
         ("passthrough", make_column_selector(dtype_include="number"))
@@ -111,9 +112,13 @@ def train_eval_cluster(models, train, test, preproc, k, models_per_cl=False, dra
     preproc.fit(train.drop(columns="price"))
     train_X = preproc_kmeans.fit_transform(train.drop(columns="price"))
     test_X = preproc_kmeans.transform(test.drop(columns="price"))"""
-    train_X = preproc.fit_transform(train.drop(columns="price"))
-    test_X = preproc.transform(test.drop(columns="price"))
-    
+    if latlong:
+        train_X = train.loc[:, ["lat","long"]]
+        test_X = test.loc[:, ["lat","long"]]
+    else:
+        train_X = preproc.fit_transform(train.drop(columns="price"))
+        test_X = preproc.transform(test.drop(columns="price"))
+
     # TRAINING
     kmeans = KMeans(n_clusters=k, algorithm="full")
     kmeans.fit(train_X)
@@ -152,6 +157,8 @@ def kmeans_choice(data, preproc=None, max_k=10):
     err = list()
     sil = list()
     fig, axs = plt.subplots(ncols=2, figsize=(10,4))
+    # Per testare il kmeans solo su latitudine e longitudine
+    # data = data.loc[:, ["lat", "long"]]
     if preproc != None:
         prep_data = preproc.fit_transform(data)
     else:
@@ -220,11 +227,11 @@ if __name__ == "__main__":
              "degree": [2,3,4]}]
     svmcv = GridSearchCV(svm, grid, cv=cvsplits)
     
-    models = [ nncv, sgdlassocv, sgdridgecv, treecv, randfcv, svmcv]
-    #models = [randfcv, svmcv]
-    #kmeans_choice(dp.train_test_equal_split(data.extended_data, ext=True, random_state=seed)[0], preproc)
+    #models = [nncv, sgdlassocv, sgdridgecv, treecv, randfcv, svmcv]
+    models = [randfcv, svmcv]
+    #kmeans_choice(dp._data_preprocess(data.extended_data), preproc)
     
-    # Splitting del dataset normale, dataset originale
+    """# Splitting del dataset normale, dataset originale
     a1=train_eval(models, 
                   *dp.train_test_equal_split(data.original_data, random_state=seed),
                   preproc, title="ORIGINAL DATA", draw=False)
@@ -237,13 +244,13 @@ if __name__ == "__main__":
     a3=train_eval(models_nocv,
                   *dp.train_test_diffcities_split(data.original_data, random_state=seed),
                   preproc, title="ORIGINAL DATA / DIFFERENT CITIES SPLITTING")
-    # Splitting del dataset con città differenti, dataset esteso
-    a4=train_eval(models_nocv,
+    # Splitting del dataset con città differenti, dataset esteso"""
+    a4=train_eval(models,
                   *dp.train_test_diffcities_split(data.extended_data, ext=True, random_state=seed),
                   preproc, title="EXTENDED DATA / DIFFERENT CITIES SPLITTING")
-    """models_nocv = [x if type(x) != GridSearchCV else x.best_estimator_ for x in models]
-    # Random forest sul primo cluster e SVM sul secondo
+    models_nocv = [x if type(x) != GridSearchCV else x.best_estimator_ for x in models]
+    # Random forest sul primo cluster e SVR sul secondo
     # KMeans
-    train_eval_cluster([randfcv.best_estimator_, svmcv.best_estimator_],
+    train_eval_cluster(models_nocv,
                        *dp.train_test_diffcities_split(data.extended_data, ext=True, random_state=seed),
-                       preproc, k=2, models_per_cl=True, draw=False)"""
+                       preproc, k=3, models_per_cl=False, draw=True)
