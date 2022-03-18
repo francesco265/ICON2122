@@ -140,7 +140,7 @@ def __print_extdata(data):
 
 if __name__ == "__main__":
     data = Dataset("../data/data.csv")
-    #print_extdata(_data_preprocess(data.extended_data))
+    __print_extdata(_data_preprocess(data.extended_data))
     d = data.original_data
     # Test per scelta delle features attraverso cross validation
     preproc = make_column_transformer(
@@ -158,5 +158,8 @@ if __name__ == "__main__":
         cv = model_selection.cross_validate(model, d1.drop(columns="price"), d1["price"],
                                    scoring=["neg_mean_absolute_error", "r2"], cv=5)
         y.append(-cv["test_neg_mean_absolute_error"].mean())
-    plt.suptitle("Feature selection attraverso correlazione delle features")
-    plt.plot(x, y, marker="o")
+    fig, ax = plt.subplots()
+    fig.suptitle("Feature selection attraverso correlazione delle features")
+    ax.set_xlabel("Correlazione con price")
+    ax.set_ylabel("MAE")
+    ax.plot(x, y, marker="o")
