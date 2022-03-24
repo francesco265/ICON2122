@@ -1,0 +1,117 @@
+--------------------------------------------------------------
+TRAINING CLUSTER 0
+95/671
+Training DummyRegressor 
+Training MLPRegressor 
+Training SGDRegressor 
+Training SGDRegressor 
+Training DecisionTreeRegressor 
+Training RandomForestRegressor 
+Training SVR 
+VALUTAZIONE CLUSTER 0
+Valutazione di DummyRegressor 
+R2 score   = -0.045
+RMSE score = 165355.34
+MAE score  = 116013.68
+Valutazione di MLPRegressor 
+R2 score   = -3.141
+RMSE score = 329103.37
+MAE score  = 265676.82
+Valutazione di SGDRegressor 
+R2 score   = -1.315
+RMSE score = 246069.36
+MAE score  = 209740.80
+Valutazione di SGDRegressor 
+R2 score   = -1.227
+RMSE score = 241350.01
+MAE score  = 205236.32
+Valutazione di DecisionTreeRegressor 
+R2 score   = -1.981
+RMSE score = 279222.81
+MAE score  = 195405.96
+Valutazione di RandomForestRegressor 
+R2 score   = -1.056
+RMSE score = 231919.25
+MAE score  = 176273.30
+Valutazione di SVR 
+R2 score   = -0.014
+RMSE score = 162850.36
+MAE score  = 123706.76
+TRAINING CLUSTER 1
+354/671
+Training DummyRegressor 
+Training MLPRegressor 
+Training SGDRegressor 
+Training SGDRegressor 
+Training DecisionTreeRegressor 
+Training RandomForestRegressor 
+Training SVR 
+VALUTAZIONE CLUSTER 1
+Valutazione di DummyRegressor 
+R2 score   = -0.003
+RMSE score = 232039.09
+MAE score  = 175135.59
+Valutazione di MLPRegressor 
+R2 score   = 0.644
+RMSE score = 138318.85
+MAE score  = 106167.82
+Valutazione di SGDRegressor 
+R2 score   = 0.595
+RMSE score = 147408.77
+MAE score  = 100309.35
+Valutazione di SGDRegressor 
+R2 score   = 0.596
+RMSE score = 147258.72
+MAE score  = 100224.03
+Valutazione di DecisionTreeRegressor 
+R2 score   = 0.413
+RMSE score = 177526.54
+MAE score  = 125350.35
+Valutazione di RandomForestRegressor 
+R2 score   = 0.541
+RMSE score = 156945.97
+MAE score  = 107479.84
+Valutazione di SVR 
+R2 score   = 0.624
+RMSE score = 141990.15
+MAE score  = 99907.89
+TRAINING CLUSTER 2
+222/671
+Training DummyRegressor 
+Training MLPRegressor 
+Training SGDRegressor 
+Training SGDRegressor 
+Training DecisionTreeRegressor 
+Training RandomForestRegressor 
+Training SVR 
+VALUTAZIONE CLUSTER 2
+Valutazione di DummyRegressor 
+R2 score   = -0.076
+RMSE score = 103743.03
+MAE score  = 82660.12
+Valutazione di MLPRegressor 
+R2 score   = 0.590
+RMSE score = 64009.57
+MAE score  = 45005.89
+Valutazione di SGDRegressor 
+R2 score   = 0.572
+RMSE score = 65457.82
+MAE score  = 46995.73
+Valutazione di SGDRegressor 
+R2 score   = 0.573
+RMSE score = 65334.73
+MAE score  = 46834.07
+Valutazione di DecisionTreeRegressor 
+R2 score   = 0.306
+RMSE score = 83347.69
+MAE score  = 57663.32
+Valutazione di RandomForestRegressor 
+R2 score   = 0.535
+RMSE score = 68201.17
+MAE score  = 44938.32
+Valutazione di SVR 
+R2 score   = 0.585
+RMSE score = 64456.98
+MAE score  = 42933.31
+MAE score congiunto dei cluster =  [136169.66719025 108515.67006542  98163.84185411  97427.599935
+ 112874.58629336  96527.77348238  84427.3170584 ]
