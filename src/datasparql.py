@@ -32,8 +32,10 @@ def _query(city: str, snippet: str):
         return None
 
 def citiesDensity(cities: list) -> dict:
-    # Restitusice un dizionario contenente la densità di popolazione per le città
-    # trovate su DBPedia
+    """
+    Restitusice un dizionario contenente la densità di popolazione per le città
+    trovate su DBPedia
+    """
     densities = dict()
     for city in cities:
         x = _query(city, QUERY_DENSITY)

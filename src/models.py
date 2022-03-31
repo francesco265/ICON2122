@@ -39,13 +39,17 @@ def draw_cv_results(title, cv_models):
         ax.set_ylabel("Score")
         ax.set_xlabel("CV splits")
         ax.set_xticks(range(cv))
+        color = iter(plt.cm.tab20(np.linspace(0, 1, len(results["params"]))))
         for i, m in enumerate(results["params"]):
+            c = next(color)
             y = list()
-            for j in range(cv):
-                y.append(results["split{}_test_score".format(j)][i])
-            p = ax.plot(range(cv), y, label=str(m).replace("{", "").replace("}", ""), marker="o")
-            ax.plot(range(cv), [results["mean_test_score"][i]]*cv,
-                    linestyle="--", color=p[0].get_color())
+            if results["mean_test_score"][i] > 0:
+                for j in range(cv):
+                    y.append(results["split{}_test_score".format(j)][i])
+                p = ax.plot(range(cv), y, c=c,
+                            label=str(m).replace("{", "").replace("}", ""), marker="o")
+                ax.plot(range(cv), [results["mean_test_score"][i]]*cv,
+                        linestyle="--", color=p[0].get_color())
         ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
         
 def draw_predicts(title, models, test_X, test_y):
@@ -73,9 +77,9 @@ def eval_model(models, test_X, test_y):
         score = model.score(test_X, test_y)
         rmse = sqrt(mean_squared_error(test_y, model.predict(test_X)))
         mae = mean_absolute_error(test_y, model.predict(test_X))
-        print("R2 score   = ", score)
-        print("RMSE score = ", rmse)
-        print("MAE score  = ", mae)
+        print("R2 score   = {:.3f}".format(score))
+        print("RMSE score = {:.2f}".format(rmse))
+        print("MAE score  = {:.2f}".format(mae))
         maes[i] = mae
     return maes
 
@@ -100,23 +104,15 @@ def train_eval(models, train, test, preproc, draw=False, title=""):
     if draw:
         draw_cv_results(title+" - CV", models)
         draw_predicts(title+" - Predictions",models, test_X, test_y)
-        
-    return train_X # TODO: DA TOGLIERE
     
 def train_eval_cluster(models, train, test, preproc, k, models_per_cl=False, 
-                       latlong=True, draw=False):
-    """preproc_kmeans = make_column_transformer(
-        (OneHotEncoder(handle_unknown="ignore"), make_column_selector(dtype_exclude="number")),
-        ("passthrough", make_column_selector(dtype_include="number"))
-    )
+                       latlong=True, draw=False):   
     preproc.fit(train.drop(columns="price"))
-    train_X = preproc_kmeans.fit_transform(train.drop(columns="price"))
-    test_X = preproc_kmeans.transform(test.drop(columns="price"))"""
     if latlong:
         train_X = train.loc[:, ["lat","long"]]
         test_X = test.loc[:, ["lat","long"]]
     else:
-        train_X = preproc.fit_transform(train.drop(columns="price"))
+        train_X = preproc.transform(train.drop(columns="price"))
         test_X = preproc.transform(test.drop(columns="price"))
 
     # TRAINING
@@ -158,7 +154,7 @@ def kmeans_choice(data, preproc=None, max_k=10):
     sil = list()
     fig, axs = plt.subplots(ncols=2, figsize=(10,4))
     # Per testare il kmeans solo su latitudine e longitudine
-    # data = data.loc[:, ["lat", "long"]]
+    data = data.loc[:, ["lat", "long"]]
     if preproc != None:
         prep_data = preproc.fit_transform(data)
     else:
@@ -180,7 +176,7 @@ if __name__ == "__main__":
     data = dp.Dataset("../data/data.csv")
     
     #seed = randint(0, 100_000)
-    seed = 19751
+    seed = 197511
     cvsplits = 5
     print("Usato il seed:", seed)
     
@@ -192,7 +188,6 @@ if __name__ == "__main__":
     # APPRENDIMENTO SUPERVISIONATO
     # Neural network
     nn = MLPRegressor(max_iter=300, random_state=0)
-    #grid = {"alpha": [0.0001, 0.001, 0.01, 0.1]}
     grid = [{"solver": ["lbfgs"],
              "hidden_layer_sizes": [(5,), (10,), (10, 5)],
              "alpha": [0.0001, 0.001, 0.01]},
@@ -201,11 +196,12 @@ if __name__ == "__main__":
              "learning_rate_init": [0.01, 0.1]}]
     nncv = GridSearchCV(nn, grid, cv=cvsplits)
     # Lasso SGD
-    sgdlasso = SGDRegressor(penalty="l1", tol=None, alpha=0.001, random_state=0)
-    grid = {"learning_rate": ["invscaling", "adaptive"], "eta0": [0.03, 0.01, 0.001]}
+    sgdlasso = SGDRegressor(penalty="l1", tol=None, random_state=0)
+    grid = {"learning_rate": ["invscaling", "adaptive"], "eta0": [0.03, 0.01, 0.001],
+            "alpha": [0.001, 0.01]}
     sgdlassocv = GridSearchCV(sgdlasso, grid, cv=cvsplits)
     # Ridge SGD
-    sgdridge = SGDRegressor(penalty="l2", tol=None, alpha=0.001, random_state=0)
+    sgdridge = SGDRegressor(penalty="l2", tol=None, random_state=0)
     grid = {"learning_rate": ["invscaling", "adaptive"], "eta0": [0.03, 0.01, 0.001],
              "alpha": [0.001, 0.01]}
     sgdridgecv = GridSearchCV(sgdridge, grid, cv=cvsplits)
@@ -227,29 +223,27 @@ if __name__ == "__main__":
              "degree": [2,3,4]}]
     svmcv = GridSearchCV(svm, grid, cv=cvsplits)
     
-    #models = [nncv, sgdlassocv, sgdridgecv, treecv, randfcv, svmcv]
-    models = [randfcv, svmcv]
-    #kmeans_choice(dp._data_preprocess(data.extended_data), preproc)
+    models = [DummyRegressor(), nncv, sgdlassocv, sgdridgecv, treecv, randfcv, svmcv]
     
-    """# Splitting del dataset normale, dataset originale
-    a1=train_eval(models, 
-                  *dp.train_test_equal_split(data.original_data, random_state=seed),
-                  preproc, title="ORIGINAL DATA", draw=False)
+    # Splitting del dataset normale, dataset originale
+    train_eval(models, 
+               *dp.train_test_equal_split(data.original_data, random_state=seed),
+               preproc, title="ORIGINAL DATA")
     models_nocv = [x if type(x) != GridSearchCV else x.best_estimator_ for x in models]
     # Splitting del dataset normale, dataset esteso
-    a2=train_eval(models_nocv,
-                  *dp.train_test_equal_split(data.extended_data, ext=True, random_state=seed),
-                  preproc, title="EXTENDED DATA")
+    train_eval(models_nocv,
+               *dp.train_test_equal_split(data.extended_data, ext=True, random_state=seed),
+               preproc, title="EXTENDED DATA")
     # Splitting del dataset con città differenti, dataset originale
-    a3=train_eval(models_nocv,
-                  *dp.train_test_diffcities_split(data.original_data, random_state=seed),
-                  preproc, title="ORIGINAL DATA / DIFFERENT CITIES SPLITTING")
-    # Splitting del dataset con città differenti, dataset esteso"""
-    a4=train_eval(models,
-                  *dp.train_test_diffcities_split(data.extended_data, ext=True, random_state=seed),
-                  preproc, title="EXTENDED DATA / DIFFERENT CITIES SPLITTING")
-    models_nocv = [x if type(x) != GridSearchCV else x.best_estimator_ for x in models]
-    # Random forest sul primo cluster e SVR sul secondo
+    train_eval(models_nocv,
+               *dp.train_test_diffcities_split(data.original_data, random_state=seed),
+               preproc, title="ORIGINAL DATA / DIFFERENT CITIES SPLITTING")
+    # Splitting del dataset con città differenti, dataset esteso
+    train_eval(models_nocv,
+               *dp.train_test_diffcities_split(data.extended_data, ext=True, random_state=seed),
+               preproc, title="EXTENDED DATA / DIFFERENT CITIES SPLITTING")
+    
+    # APPRENDIMENTO NON SUPERVISIONATO
     # KMeans
     train_eval_cluster(models_nocv,
                        *dp.train_test_diffcities_split(data.extended_data, ext=True, random_state=seed),

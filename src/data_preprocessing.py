@@ -7,7 +7,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 from scipy.stats import zscore
 from sklearn import model_selection
-from sklearn.linear_model import Ridge
+from sklearn.linear_model import Lasso
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.compose import make_column_selector, make_column_transformer
 from sklearn.pipeline import make_pipeline
@@ -50,12 +50,6 @@ class Dataset:
                 exdata.loc[i, "long"] = y[city][1]
         exdata.to_csv(expath, index=False)
         return exdata
-    def dropFeatures(self, features: list):
-        self.original_data.drop(labels=features, axis=1, inplace=True)
-        self.extended_data.drop(labels=features, axis=1, inplace=True)
-    def callFunc(self, f):
-        f(self.original_data)
-        f(self.extended_data)
             
 def _set_seeds(seed):
     """
@@ -71,8 +65,8 @@ def _data_preprocess(data, statezip=False):
     data.yr_renovated = data[["yr_built", "yr_renovated"]].max(axis=1)
     if not statezip:
         data.statezip = data.statezip.map(lambda x: x.replace("WA ", "")).astype(int)
-
-    #return data[(abs(zscore(data.select_dtypes("number"))) < 3).all(axis=1)]
+    
+    #return data[(abs(zscore(data.select_dtypes("number"))) < 2.5).all(axis=1)]
     return data[(abs(zscore(data.loc[:, :"yr_renovated"])) < 2.5).all(axis=1)]
     
 def train_test_equal_split(data, tr_size=0.8, ext=False, random_state=None):
@@ -147,7 +141,7 @@ if __name__ == "__main__":
         (OneHotEncoder(handle_unknown="ignore"), make_column_selector(dtype_exclude="number")),
         (StandardScaler(), make_column_selector(dtype_include="number"))
     )
-    model = make_pipeline(preproc, Ridge())
+    model = make_pipeline(preproc, Lasso(alpha=100))
     d = _data_preprocess(d)
     max_val = float("{:.2f}".format(d.corrwith(d.price).drop("price").max()))
     x = np.arange(0, max_val, 0.05)
