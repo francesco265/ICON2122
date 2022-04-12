@@ -16,14 +16,14 @@
 
 \section{Progetto}
 \paragraph{Introduzione.}
-Lo scopo di questo progetto è costruire dei modelli di regressione per la
-predizione di prezzi di alcune case, partendo da caratteristiche della casa e
-del luogo dove si trova. Inoltre vengono confrontate le performance di modelli
+Lo scopo di questo progetto è costruire dei modelli di regressione (utilizzando
+algoritmi e metodologie presenti nel programma della materia) per la
+predizione di prezzi di alcune case, partendo dalle loro caratteristiche e
+del luogo dove si trovano. Inoltre vengono confrontate le performance di modelli
 allenati sul dataset originale e su un dataset esteso, al quale sono state
 aggiunte alcune features attraverso query a \href{http://dbpedia.org}
-{\textbf{DBpedia}}, quindi si vedrà se è possibile migliorare le predizioni 
-dei prezzi attraverso l'integrazione di conoscenza proveniente dal web
-semantico.
+{\textbf{DBpedia}}, al fine di vedere se è possibile migliorare le predizioni 
+attraverso l'integrazione di conoscenza proveniente dal web semantico.
 
 \subsection{Requisiti}
 Il progetto è stato scritto interamente in \textbf{Python 3} e sono state usate
@@ -55,7 +55,7 @@ La repository è organizzata nel seguente modo:
 				training ed il testing
 		\end{itemize}
 	\item \textbf{docs:} contiene la documentazione del progetto
-	\item \textbf{img:} contiene la documentazione del progetto
+	\item \textbf{img:} contiene le immagini presenti in questo documento
 \end{itemize}
 
 \section{Analisi dei dati, processing e conoscenza dal web semantico}
@@ -116,7 +116,9 @@ sembra influire meno, come si può vedere nella figura \ref{fig:cities}.
 	\includegraphics[scale=0.4]{cities}
 	\label{fig:cities}
 	\caption{Case raggruppate per città, il colore rappresenta il prezzo
-	medio delle case, la grandezza del punto mostra la densità di popolazione.}
+	medio delle case, la grandezza del punto mostra la densità di popolazione.
+	Si nota un gruppo di città limitrofe per il quale il prezzo medio delle
+	case è maggiore.}
 \end{figure}
 
 \subsection{La classe Dataset}
@@ -249,9 +251,9 @@ creazione di modelli più performanti.
 \section{Modelli di regressione}
 \label{sec:regressionintro}
 Per effettuare le predizioni sul prezzo delle case sono stati usati diversi
-modelli di regressione lineare e non, al fine di confrontare i risultati dei
-vari modelli e trovare i più performanti. Questi modelli sono creati, allenati
-e testati nel modulo \textbf{models.py}, dove viene anche effettuata la model
+modelli di regressione lineare e non, al fine di confrontarne i risultati
+e trovare i più performanti. Questi modelli sono creati, allenati e testati
+nel modulo \textbf{models.py}, dove viene anche effettuata la model
 selection per trovare dei valori ottimali per gli iperparametri, attraverso
 una K-fold cross validation ($k = 5$). Ciascun modello viene allenato e testato
 quattro volte:
@@ -261,8 +263,8 @@ quattro volte:
 		\textbf{train\_test\_equal\_split()}.
 	\item La seconda volta si utilizza il dataset esteso utilizzando la
 		medesima funzione di splitting. A questo punto sarà possibile
-		confrontare i risultati delle predizioni allenando uno stesso modello
-		allenato però con i diversi dataset.
+		confrontare i risultati delle predizioni rispetto ad uno stesso modello
+		allenato con gli stessi dati di training ma con le feature aggiuntive.
 	\item Successivamente i modelli vengono allenati con il dataset originale
 		simulando la situazione in cui nel testing vengono incontrati case
 		in città mai incontrate durante il training (viene utilizzata la
@@ -295,7 +297,7 @@ effettuato dalla funzione \textbf{train\_eval()}.
 
 \subsubsection{Rete neurale}
 Per la rete neurale viene effettuata la model selection su diversi parametri
-quali: algoritmo di ottimizzazione, numero di neuroni e strati e parametro per
+quali: algoritmo di ottimizzazione, numero di neuroni, strati e parametro per
 la regolarizzazione L2 ($\alpha$ nella formula \ref{eq:nn}). La funzione
 \ref{eq:nn} mostra il valore che la rete neurale cerca di ottimizzare.
 \begin{equation}
@@ -334,7 +336,7 @@ caso è la stessa della rete neurale (formula \ref{eq:nn}).
 \subsubsection{Decision tree}
 Per il decision tree la cross validation viene utilizzata per stimare parametri
 quali la massima profondità dell'albero ed il numero minimo di sample che una
-foglia può contenere.
+foglia deve contenere.
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.9\textwidth]{treecv.png}
@@ -378,8 +380,8 @@ Il clustering può essere effettuato in due modi:
 \begin{enumerate}
 	\item Il K-means viene allenato su tutte le feature dei dati, anche se
 		questi hanno un'alta dimensionalità. In questo caso il miglior valore
-		per k sembra essere $k=2$ come si vede nella figura a sinistra,
-		anche se i dati non sono molto divisibili e quindi questo approccio
+		per k sembra essere $k=2$ come si vede nella figura a sinistra.
+		I dati però non sembrano molto divisibili quindi questo approccio
 		probabilmente non migliorerà molto la precisione dei modelli.
 		\begin{figure}[ht]
 			\centering
@@ -406,7 +408,7 @@ Il clustering può essere effettuato in due modi:
 
 La seguente funzione divide il training set in k cluster e su ciascuno di
 questi esegue il training di ogni modello passato in input (viene creata una
-copia per cluster), inoltre esegue il testing assegnando il sample al relativo
+copia per cluster), inoltre esegue il testing assegnando il sample al
 cluster ed utilizza per la predizione il relativo modello.
 \begin{minted}[frame=single]{Python}
 def train_eval_cluster(models, train, test, preproc, k, models_per_cl=False, 
