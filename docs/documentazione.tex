@@ -7,7 +7,9 @@
 \graphicspath{ {../imgs/} }
 \STautoround{3}
 \title{Progetto ICON 21/22}
-\author{Francesco Bottalico - 718330 \\ f.bottalico15@outlook.it}
+\author{Francesco Bottalico - 718330 \\
+		f.bottalico15@outlook.it \\
+		https://github.com/francesco265/ICON2122}
 \date{}
 
 \begin{document}
@@ -216,7 +218,7 @@ In [4]: data[(abs(zscore(data.loc[:, :"yr_renovated"])) < 2.5).all(axis=1)]
 	\item[One hot encoding] Eventuali feature categoriche vengono codificate\\
 		utilizzando il one hot encoding (come per la standardizzazione questa
 		operazione viene effettuata nel modulo \textbf{models.py} prima del
-		training.
+		training).
 \end{description}
 Tutte queste operazioni vengono eseguite dalla funzione:
 \mint[frame=single]{Python}|def _data_preprocess(data, statezip=False)|
@@ -540,7 +542,7 @@ classificati come appartenenti al cluster sul totale degli esempi di test.
 La colonna "Tot MAE" non è altro che la media tra tutti i cluster calcolata
 come:
 \begin{equation}
-	\frac{\sum_{i=1}^k MAE_i \cdot |Cluster_i|}{\sum_{i=1}^k |Cluster_i|}
+	\frac{\sum_{i=1}^k MAE_i \cdot |Cluster_i|}{\sum_{j=1}^k |Cluster_j|}
 \end{equation}
 In questo caso riscontriamo qualche piccolo miglioramento negli stimatori
 \textbf{Lasso}, \textbf{Ridge} e \textbf{SVM}. Inoltre si può notare come
