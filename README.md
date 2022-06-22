@@ -2,9 +2,11 @@
 Il progetto consiste nel migliorare le prestazioni di modelli di machine
 learning studiati durante l'anno, per un problema di regressione, estendendo il
 dataset attraverso l'utilizzo del web semantico per accedere ed interrogare
-una base di conoscenza.
+una base di conoscenza. (**ML+OntoBK**)
 
-Inoltre viene visto come utilizzare dei modelli di apprendimento non
+Inoltre prendendo spunto da
+[articoli scientifici](https://home.ttic.edu/~shubhendu/Papers/clustering_bagging.pdf)
+viene visto come utilizzare dei modelli di apprendimento non
 supervisionato (K-means) per il task di regressione, combinandoli con
 i modelli supervisionati e con la conoscenza estratta dall'ontologia web,
 al fine di migliorare ulteriormente le performance.

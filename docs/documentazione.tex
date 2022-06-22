@@ -18,14 +18,26 @@
 
 \section{Progetto}
 \paragraph{Introduzione.}
-Lo scopo di questo progetto è costruire dei modelli di regressione (utilizzando
-algoritmi e metodologie presenti nel programma della materia) per la
-predizione di prezzi di alcune case, partendo dalle loro caratteristiche e
-del luogo dove si trovano. Inoltre vengono confrontate le performance di modelli
-allenati sul dataset originale e su un dataset esteso, al quale sono state
-aggiunte alcune features attraverso query a \href{http://dbpedia.org}
-{\textbf{DBpedia}}, al fine di vedere se è possibile migliorare le predizioni 
-attraverso l'integrazione di conoscenza proveniente dal web semantico.
+Questo progetto consiste nel migliorare le prestazioni di alcuni modelli di
+apprendimento (utilizzando algoritmi e metodologie presenti nel programma della
+materia), integrando della conoscenza esterna al dataset proveniente dal web
+semantico, in particolare dall'ontologia web \href{http://dbpedia.org}{\textbf{
+DBPedia}}, per risolvere un problema di regressione (predizione del prezzo di 
+case). I modelli sono confrontati sul dataset originale e su quello esteso
+(cioè con aggiunte le features estratte da DBPedia), provando anche differenti
+metodi di divisione del dataset per simulare differenti situazioni.
+Infine viene visto com'è possibile utilizzare un algoritmo di clustering
+(K-means) insieme alla conoscenza estratta dall'ontologia per
+migliorare ulteriormente le prestazioni dei modelli supervisionati.
+
+%Lo scopo di questo progetto è costruire dei modelli di regressione (utilizzando
+%algoritmi e metodologie presenti nel programma della materia) per la
+%predizione di prezzi di alcune case, partendo dalle loro caratteristiche e
+%del luogo dove si trovano. Inoltre vengono confrontate le performance di modelli
+%allenati sul dataset originale e su un dataset esteso, al quale sono state
+%aggiunte alcune features attraverso query a \href{http://dbpedia.org}
+%{\textbf{DBpedia}}, al fine di vedere se è possibile migliorare le predizioni 
+%attraverso l'integrazione di conoscenza proveniente dal web semantico.
 
 \subsection{Requisiti}
 Il progetto è stato scritto interamente in \textbf{Python 3} e sono state usate
@@ -66,7 +78,7 @@ seguenti attributi:
 \begin{enumerate}
 	\itemsep0em
 	\item \textbf{date:} data di rilevazione
-	\item \textbf{price:} prezzo della casa
+	\item \textbf{price:} prezzo della casa (\textbf{feature target})
 	\item \textbf{bedrooms:} numero di stanze da letto
 	\item \textbf{bathrooms:} numero di bagni
 	\item \textbf{sqft\_living:} dimensione della casa
