@@ -66,7 +66,6 @@ def _data_preprocess(data, statezip=False):
     if not statezip:
         data.statezip = data.statezip.map(lambda x: x.replace("WA ", "")).astype(int)
     
-    #return data[(abs(zscore(data.select_dtypes("number"))) < 2.5).all(axis=1)]
     return data[(abs(zscore(data.loc[:, :"yr_renovated"])) < 2.5).all(axis=1)]
     
 def train_test_equal_split(data, tr_size=0.8, ext=False, random_state=None):

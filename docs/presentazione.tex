@@ -162,18 +162,37 @@ sembra influire meno, come si può vedere nella figura.
 		\caption{Andamento dello score sui vari fold della cross validation dati
 		diversi valori per gli iperparametri. le rette tratteggiate indicano il
 		valore medio.}
+		\begin{alertblock}{Migliori parametri}
+			solver = 'adam'\\
+			hidden\_layer\_sizes=(20,10)\\
+			learning\_rate\_init=0.1
+		\end{alertblock}
 	\end{figure}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Model selection regressione lineare L1 e L2}
-	\begin{figure}[ht]
-		\centering
-		\includegraphics[width=0.75\textwidth]{lassocv.png}
-		\includegraphics[width=0.75\textwidth]{ridgecv.png}
-		\caption{Score delle cross validation per la model selection dei modelli
-		di regressione lineare con regolarizzazione L1 (sopra) ed L2 (sotto).}
-	\end{figure}
+	\begin{columns}
+	\column{0.7\textwidth}
+		\begin{figure}[ht]
+			\centering
+			\includegraphics[width=\textwidth]{lassocv.png}
+			\includegraphics[width=\textwidth]{ridgecv.png}
+			\caption{Score delle cross validation per la model selection dei modelli
+			di regressione lineare con regolarizzazione L1 (sopra) ed L2 (sotto).}
+		\end{figure}
+	\column{0.3\textwidth}
+		\begin{alertblock}{Migliori parametri L1}
+			alpha = 0.001\\
+			eta0 = 0.03\\
+			learning\_rate = 'invscaling'
+		\end{alertblock}
+		\begin{alertblock}{Migliori parametri L2}
+			alpha = 0.001\\
+			eta0 = 0.03\\
+			learning\_rate = 'invscaling'
+		\end{alertblock}
+	\end{columns}
 \end{frame}
 
 \begin{frame}
@@ -184,6 +203,10 @@ sembra influire meno, come si può vedere nella figura.
 		\caption{Score delle cross validation per la model selection del decision
 		tree.}
 	\end{figure}
+	\begin{alertblock}{Migliori parametri}
+		max\_depth = 10\\
+		min\_samples\_leaf = 5
+	\end{alertblock}
 \end{frame}
 
 \begin{frame}
@@ -194,6 +217,10 @@ sembra influire meno, come si può vedere nella figura.
 		\caption{Score delle cross validation per la model selection del decision
 		tree.}
 	\end{figure}
+	\begin{alertblock}{Migliori parametri}
+		max\_depth = None\\
+		max\_features = 'log2'
+	\end{alertblock}
 \end{frame}
 
 \begin{frame}
@@ -204,6 +231,10 @@ sembra influire meno, come si può vedere nella figura.
 		\caption{Score delle cross validation per la model selection della support
 		vector machine.}
 	\end{figure}
+	\begin{alertblock}{Migliori parametri}
+		C = 50000\\
+		kernel = 'linear'
+	\end{alertblock}
 \end{frame}
 
 \begin{frame}
